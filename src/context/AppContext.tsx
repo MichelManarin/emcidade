@@ -136,7 +136,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
         // Carregar dados baseado no subdomínio + cidade
         const businessData = getBusinessData(sub.toLowerCase(), cityName.toLowerCase());
-        setData(businessData);
+        
+        // Verifica se encontrou dados válidos (não é o padrão vazio)
+        const key = `${sub.toLowerCase()}-${cityName.toLowerCase()}`;
+        const isValidBusiness = businessData.business.name !== "Nome da Empresa";
+        
+        if (isValidBusiness) {
+          setData(businessData);
+        }
       }
       setLoading(false);
     }
@@ -155,6 +162,27 @@ export function useAppContext() {
     throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
+}
+
+// Função para obter todos os subdomínios disponíveis
+export function getAllBusinesses(): Array<{ subdomain: string; city: string; data: BusinessData }> {
+  const businesses: Array<{ subdomain: string; city: string; data: BusinessData }> = [];
+  
+  // Lista de todas as combinações disponíveis
+  const availableBusinesses = [
+    { subdomain: "premoldado", city: "criciuma" },
+  ];
+
+  availableBusinesses.forEach(({ subdomain, city }) => {
+    const data = getBusinessData(subdomain, city);
+    businesses.push({
+      subdomain: subdomain.charAt(0).toUpperCase() + subdomain.slice(1),
+      city: city.charAt(0).toUpperCase() + city.slice(1),
+      data,
+    });
+  });
+
+  return businesses;
 }
 
 // Função para carregar dados baseado no subdomínio e cidade

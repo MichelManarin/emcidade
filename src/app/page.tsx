@@ -11,10 +11,16 @@ import HoursCard from "@/components/HoursCard";
 import MapCard from "@/components/MapCard";
 import FAQCard from "@/components/FAQCard";
 import DomainInfo from "@/components/DomainInfo";
+import BusinessList from "@/components/BusinessList";
 import { useAppContext } from "@/context/AppContext";
 
 export default function Home() {
-  const { data, loading } = useAppContext();
+  const { data, loading, subdomain, city } = useAppContext();
+
+  // Se não há subdomínio ou cidade, mostra a lista de negócios
+  if (!loading && (!subdomain || !city || !data)) {
+    return <BusinessList />;
+  }
 
   const getDayOfWeek = (day: string): string[] => {
     const mapping: Record<string, string> = {
