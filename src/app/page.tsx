@@ -8,10 +8,12 @@ import ContactCard from "@/components/ContactCard";
 import HoursCard from "@/components/HoursCard";
 import MapCard from "@/components/MapCard";
 import FAQCard from "@/components/FAQCard";
+import DomainInfo from "@/components/DomainInfo";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+      <DomainInfo />
       <div className="max-w-[1200px] mx-auto px-4 py-4 sm:px-6 sm:py-6">
         <Hero />
 
