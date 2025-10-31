@@ -134,7 +134,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       let cityName = "";
 
       // Tentar extrair do hostname primeiro
-      const parts = hostname.split(".");
+      // Remove www. se existir
+      const cleanHostname = hostname.replace(/^www\./, "");
+      const parts = cleanHostname.split(".");
       if (parts.length >= 3) {
         sub = parts[0];
         const cityPart = parts[1];
@@ -177,9 +179,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
             // Verificar se é uma categoria conhecida
             const category = getCategoryData(sub.toLowerCase());
             if (category) {
+              setData(null); // Garantir que data é null para categorias
               setIsCategory(true);
               setCategoryData(category);
             } else {
+              setData(null);
               setIsCategory(false);
               setCategoryData(null);
             }
@@ -189,9 +193,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
           const category = getCategoryData(sub.toLowerCase());
           if (category) {
             setCity("sua cidade"); // Cidade padrão
+            setData(null); // Garantir que data é null para categorias
             setIsCategory(true);
             setCategoryData(category);
           } else {
+            setData(null);
             setIsCategory(false);
             setCategoryData(null);
           }

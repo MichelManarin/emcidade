@@ -19,15 +19,24 @@ import { useAppContext } from "@/context/AppContext";
 export default function Home() {
   const { data, loading, subdomain, city, isCategory, categoryData } = useAppContext();
 
+  // Se ainda está carregando, não mostra nada
+  if (loading) {
+    return null;
+  }
+
   // Se é uma categoria conhecida mas sem negócio cadastrado, mostra página temática
-  if (!loading && subdomain && isCategory && categoryData) {
+  // Verificação deve ser feita ANTES das outras para garantir prioridade
+  if (subdomain && isCategory && categoryData) {
     return <CategoryPage />;
   }
 
   // Se não há subdomínio ou cidade, mostra a página de "Alugue seu espaço"
-  if (!loading && (!subdomain || !city || !data)) {
+  // Mas só se NÃO for uma categoria (que já foi tratada acima)
+  if (!subdomain || (!city && !isCategory) || (!data && !isCategory)) {
     return <RentSpace />;
   }
+  
+  // Se chegou aqui, deve ter dados válidos de negócio
 
   const getDayOfWeek = (day: string): string[] => {
     const mapping: Record<string, string> = {
