@@ -222,10 +222,10 @@ function getBusinessData(subdomain: string, city: string): BusinessData {
         responseTime: "~20 min",
       },
       address: {
-        street: "Rua dos Premoldados, 450",
-        city: "Criciúma",
+        street: "Rodovia SC-108",
+        city: "Orleans",
         state: "SC",
-        zipCode: "88805-000",
+        zipCode: "88870-000",
         coordinates: {
           lat: -28.6726,
           lng: -49.3719,
