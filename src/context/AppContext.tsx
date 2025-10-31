@@ -385,6 +385,11 @@ function getBusinessData(subdomain: string, city: string): BusinessData {
   return configs[key] || getDefaultData();
 }
 
+// Função para obter todas as categorias disponíveis
+export function getAllCategories(): string[] {
+  return ["floricultura", "grafica", "pneus"];
+}
+
 // Função para obter dados de categoria
 export function getCategoryData(categoryName: string): CategoryData | null {
   const categories: Record<string, CategoryData> = {
