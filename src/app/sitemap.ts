@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllBusinesses } from '@/context/AppContext'
-import { getAllCategories } from '@/context/AppContext'
+import { getAllBusinesses, getAllCategories } from '@/data/businessData'
 
 // Configure seu domínio base aqui (sem protocolo, será usado como base)
 const DOMAIN_BASE = process.env.NEXT_PUBLIC_DOMAIN_BASE || 'emcidade.com.br'
