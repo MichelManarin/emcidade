@@ -12,14 +12,21 @@ import MapCard from "@/components/MapCard";
 import FAQCard from "@/components/FAQCard";
 import DomainInfo from "@/components/DomainInfo";
 import BusinessList from "@/components/BusinessList";
+import RentSpace from "@/components/RentSpace";
+import CategoryPage from "@/components/CategoryPage";
 import { useAppContext } from "@/context/AppContext";
 
 export default function Home() {
-  const { data, loading, subdomain, city } = useAppContext();
+  const { data, loading, subdomain, city, isCategory, categoryData } = useAppContext();
 
-  // Se não há subdomínio ou cidade, mostra a lista de negócios
+  // Se é uma categoria conhecida mas sem negócio cadastrado, mostra página temática
+  if (!loading && subdomain && isCategory && categoryData) {
+    return <CategoryPage />;
+  }
+
+  // Se não há subdomínio ou cidade, mostra a página de "Alugue seu espaço"
   if (!loading && (!subdomain || !city || !data)) {
-    return <BusinessList />;
+    return <RentSpace />;
   }
 
   const getDayOfWeek = (day: string): string[] => {
