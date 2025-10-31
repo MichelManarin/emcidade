@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   themeColor: "#0f172a",
 };
 
+import { AppProvider } from "@/context/AppContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}
       >
-        {children}
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

@@ -1,13 +1,23 @@
+"use client";
+
 import Image from "next/image";
+import { useAppContext } from "@/context/AppContext";
 
 export default function Hero() {
+  const { data, loading } = useAppContext();
+
+  if (loading || !data) return null;
+
+  const ratingStars = "★".repeat(Math.floor(data.business.rating));
+  const ratingDecimal = data.business.rating % 1 >= 0.5 ? "½" : "";
+
   return (
     <header className="relative isolate overflow-hidden rounded-xl sm:rounded-[22px] bg-gradient-to-b from-slate-50 to-blue-50 shadow-[0_10px_30px_rgba(0,0,0,.08)]">
       <div className="relative z-10 grid gap-3 sm:gap-5 p-4 sm:p-6 lg:p-9">
         <nav className="flex gap-1.5 sm:gap-2.5 items-center text-slate-600 text-xs sm:text-[13px] flex-wrap" aria-label="breadcrumb">
           <a href="#" className="opacity-90 hover:opacity-100 text-slate-700">Guia da Cidade</a>
           <span>›</span>
-          <a href="#" className="opacity-90 hover:opacity-100 text-slate-700">Criciúma</a>
+          <a href="#" className="opacity-90 hover:opacity-100 text-slate-700">{data.business.city}</a>
           <span>›</span>
           <span className="text-slate-800 font-medium">Perfil</span>
         </nav>
@@ -15,8 +25,8 @@ export default function Hero() {
         <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-5 items-start sm:items-center">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[16px] sm:rounded-[20px] overflow-hidden border border-slate-200 shadow-[0_6px_20px_rgba(0,0,0,.05)] mx-auto sm:mx-0">
             <Image
-              src="https://images.unsplash.com/photo-1549921296-3b4a841d6dc5?q=80&w=512&auto=format&fit=crop"
-              alt="Logo da empresa"
+              src={data.business.logo}
+              alt={`Logo ${data.business.name}`}
               width={82}
               height={82}
               className="w-full h-full object-cover"
@@ -25,30 +35,24 @@ export default function Hero() {
 
           <div className="flex flex-col gap-2 text-center sm:text-left">
             <h1 className="text-2xl sm:text-[clamp(26px,4vw,40px)] font-extrabold tracking-tight leading-tight text-slate-900">
-              Nome da Empresa
+              {data.business.name}
             </h1>
             <div className="text-xs sm:text-sm text-slate-700">
-              Categoria • Criciúma, SC • <span className="text-amber-500" aria-label="avaliação">★★★★★</span> <span className="font-semibold text-slate-900">4,9</span> <span className="text-slate-600">(213)</span>
+              {data.business.category} • {data.business.city}, {data.business.state} • <span className="text-amber-500" aria-label={`Avaliação ${data.business.rating}`}>{ratingStars}{ratingDecimal}</span> <span className="font-semibold text-slate-900">{data.business.rating}</span> <span className="text-slate-600">({data.business.reviewCount})</span>
             </div>
             <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center sm:justify-start">
-              <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 border border-amber-400/40 rounded-full bg-gradient-to-b from-amber-500/15 to-amber-500/8 backdrop-blur-sm text-[11px] sm:text-[12px] text-amber-900 font-medium">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500"></span>
-                Exclusivo nesta categoria
-              </span>
-              <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 border border-slate-200 rounded-full bg-white/80 backdrop-blur-sm text-[11px] sm:text-[12px] text-slate-700 font-medium">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-600"></span>
-                Entrega em domicílio
-              </span>
-              <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 border border-slate-200 rounded-full bg-white/80 backdrop-blur-sm text-[11px] sm:text-[12px] text-slate-700 font-medium">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-600"></span>
-                Aceita Pix
-              </span>
+              {data.business.badges.map((badge, index) => (
+                <span key={index} className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 border border-slate-200 rounded-full bg-white/80 backdrop-blur-sm text-[11px] sm:text-[12px] text-slate-700 font-medium">
+                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-600"></span>
+                  {badge}
+                </span>
+              ))}
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <a
-              href="https://wa.me/5548999999999"
+              href={`https://wa.me/${data.contact.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 sm:gap-2.5 px-4 py-2.5 sm:py-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white shadow-[0_6px_20px_rgba(37,99,235,.3)] font-semibold transition-all duration-200 hover:shadow-[0_8px_25px_rgba(37,99,235,.4)] text-sm sm:text-base"
@@ -60,7 +64,7 @@ export default function Hero() {
               WhatsApp
             </a>
             <a
-              href="tel:+554833334444"
+              href={`tel:${data.contact.phone.replace(/\s/g, "")}`}
               className="inline-flex items-center justify-center gap-2 sm:gap-2.5 px-4 py-2.5 sm:py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 shadow-[0_6px_20px_rgba(0,0,0,.05)] font-semibold transition-all duration-200 text-sm sm:text-base"
               aria-label="Ligar por telefone"
             >
@@ -75,4 +79,3 @@ export default function Hero() {
     </header>
   );
 }
-

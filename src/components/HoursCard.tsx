@@ -1,13 +1,11 @@
+"use client";
+
+import { useAppContext } from "@/context/AppContext";
+
 export default function HoursCard() {
-  const hours = [
-    { day: "Segunda", time: "08:00 – 18:00", open: true },
-    { day: "Terça", time: "08:00 – 18:00", open: true },
-    { day: "Quarta", time: "08:00 – 18:00", open: true },
-    { day: "Quinta", time: "08:00 – 18:00", open: true },
-    { day: "Sexta", time: "08:00 – 18:00", open: true },
-    { day: "Sábado", time: "09:00 – 13:00", open: true },
-    { day: "Domingo", time: "Fechado", open: false },
-  ];
+  const { data, loading } = useAppContext();
+
+  if (loading || !data || !data.enabled.hoursCard) return null;
 
   return (
     <div className="bg-white border border-slate-200 rounded-xl sm:rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,.08)] overflow-hidden">
@@ -17,7 +15,7 @@ export default function HoursCard() {
       <div className="p-3 sm:p-5">
         <div className="grid gap-2.5">
           <ul className="list-none p-0 m-0 border border-slate-200 rounded-[14px] overflow-hidden">
-            {hours.map((hour, index) => (
+            {data.hours.map((hour, index) => (
               <li
                 key={index}
                 className="grid grid-cols-[1fr_auto] gap-3 px-3.5 py-2.5 border-b border-slate-200 last:border-b-0 bg-white"
@@ -34,4 +32,3 @@ export default function HoursCard() {
     </div>
   );
 }
-
