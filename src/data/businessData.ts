@@ -32,7 +32,7 @@ export function getCategoryData(categoryName: string): CategoryData | null {
   const categories: Record<string, CategoryData> = {
     floricultura: {
       name: "floricultura",
-      title: "Floriculturas em {city}",
+      title: "Floricultura em {city}",
       description: "Encontre as melhores floriculturas da região. Flores frescas, arranjos personalizados, plantas ornamentais e muito mais para tornar seus momentos especiais ainda mais bonitos.",
       icon: "🌸",
       color: "pink",
