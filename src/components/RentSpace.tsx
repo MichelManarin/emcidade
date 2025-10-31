@@ -1,7 +1,7 @@
 "use client";
 
 // Configure o número do WhatsApp aqui (formato: 5548999999999 sem espaços ou caracteres especiais)
-const CONTACT_WHATSAPP = "5548999999999";
+const CONTACT_WHATSAPP = "5548999402244";
 
 export default function RentSpace() {
   const handleContact = () => {

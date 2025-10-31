@@ -3,7 +3,7 @@
 import { useAppContext } from "@/context/AppContext";
 
 // Configure o número do WhatsApp aqui
-const CONTACT_WHATSAPP = "5548999999999";
+const CONTACT_WHATSAPP = "5548999402244";
 
 export default function CategoryPage() {
   const { categoryData, city, subdomain } = useAppContext();
