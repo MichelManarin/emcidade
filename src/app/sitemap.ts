@@ -1,58 +1,36 @@
-import { MetadataRoute } from 'next'
-import { getAllBusinesses, getAllCategories } from '@/data/businessData'
-
-// Configure seu domínio base aqui (sem protocolo, será usado como base)
-const DOMAIN_BASE = process.env.NEXT_PUBLIC_DOMAIN_BASE || 'emcidade.com.br'
-
-// Lista de cidades disponíveis (ajuste conforme necessário)
-const CITIES = ['criciuma']
-
-function buildSubdomainUrl(subdomain: string, city: string): string {
-  const cityLower = city.toLowerCase()
-  const subdomainLower = subdomain.toLowerCase()
-  // Formato: subdomain.emcity.com.br
-  // Se DOMAIN_BASE é 'emcidade.com.br', extraímos apenas 'com.br'
-  const domainSuffix = DOMAIN_BASE.includes('.') 
-    ? DOMAIN_BASE.split('.').slice(-2).join('.') 
-    : DOMAIN_BASE
-  return `https://${subdomainLower}.em${cityLower}.${domainSuffix}`
-}
+import { MetadataRoute } from 'next';
+import { getAllSubdomains } from '@/lib/subdomain-utils';
+import { getAllImovelIds } from '@/subdomains/apartamentosavenda/lib/imoveis';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes: MetadataRoute.Sitemap = []
+  const subdomains = getAllSubdomains();
+  const routes: MetadataRoute.Sitemap = [];
 
-  // Página home
-  routes.push({
-    url: `https://${DOMAIN_BASE}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 1,
-  })
-
-  // Rotas de empresas (ex: premoldado.emcriciuma.com.br)
-  const businesses = getAllBusinesses()
-  businesses.forEach(({ subdomain, city }) => {
+  // Itera sobre cada subdomínio
+  subdomains.forEach((config) => {
+    const baseUrl = `https://${config.subdomain}.${config.baseDomain}`;
+    
+    // 1. Adiciona a página principal do subdomínio (lista de imóveis)
     routes.push({
-      url: buildSubdomainUrl(subdomain, city),
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    })
-  })
+      changeFrequency: 'daily',
+      priority: 1.0,
+    });
 
-  // Rotas de categorias (ex: floricultura.emcriciuma.com.br)
-  const categories = getAllCategories()
-  CITIES.forEach(city => {
-    categories.forEach(category => {
-      routes.push({
-        url: buildSubdomainUrl(category, city),
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      })
-    })
-  })
+    // 2. Se for o subdomínio de apartamentos, adiciona as rotas dos imóveis
+    if (config.subdomain === 'apartamentosavenda') {
+      const imovelIds = getAllImovelIds();
+      imovelIds.forEach((id) => {
+        routes.push({
+          url: `${baseUrl}/imovel/${id}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.9,
+        });
+      });
+    }
+  });
 
-  return routes
+  return routes;
 }
-

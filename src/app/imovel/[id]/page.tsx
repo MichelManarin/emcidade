@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { getSubdomainFromHost } from '@/lib/subdomain-utils';
 import ApartamentosAVendaApp from '@/subdomains/apartamentosavenda';
 
-export default function Home() {
+export default function ImovelPage() {
+  const params = useParams();
   const [subdomain, setSubdomain] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,42 +16,6 @@ export default function Home() {
       const detectedSubdomain = getSubdomainFromHost(host);
       setSubdomain(detectedSubdomain);
       setLoading(false);
-
-      // Schema.org JSON-LD para SEO
-      if (detectedSubdomain === 'apartamentosavenda') {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
-        script.text = JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "RealEstateListing",
-          "name": "IMÓVEL EXCLUSIVO - TODO MOBILIADO",
-          "description": "Apartamento totalmente mobiliado em Criciúma com 3 dormitórios (1 suíte), closet, sacada com bar/adega, 3 ar condicionado split, aquecimento a gás e muito mais.",
-          "url": typeof window !== 'undefined' ? window.location.href : '',
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Criciúma",
-            "addressRegion": "SC",
-            "addressCountry": "BR"
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": "930000",
-            "priceCurrency": "BRL",
-            "availability": "https://schema.org/InStock"
-          },
-          "numberOfRooms": 3,
-          "floorSize": {
-            "@type": "QuantitativeValue",
-            "unitCode": "MTK"
-          },
-          "broker": {
-            "@type": "RealEstateAgent",
-            "name": "Patrícia Dorigon",
-            "telephone": "+55-48-9981-5876"
-          }
-        });
-        document.head.appendChild(script);
-      }
     }
   }, []);
 
