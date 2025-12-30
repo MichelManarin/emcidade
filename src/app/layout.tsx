@@ -85,6 +85,43 @@ export default function RootLayout({
           }
         });
       }
+
+      // Adiciona scripts de tracking apenas para apartamentosavenda
+      if (subdomain === 'apartamentosavenda') {
+        // Microsoft Clarity
+        if (!document.querySelector('script[data-clarity]')) {
+          const clarityScript = document.createElement('script');
+          clarityScript.type = 'text/javascript';
+          clarityScript.setAttribute('data-clarity', 'true');
+          clarityScript.innerHTML = `
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "utshat987k");
+          `;
+          document.head.appendChild(clarityScript);
+        }
+
+        // Google Ads (gtag.js)
+        if (!document.querySelector('script[src*="googletagmanager"]')) {
+          // Script async do gtag.js
+          const gtagScript = document.createElement('script');
+          gtagScript.async = true;
+          gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17843619481';
+          document.head.appendChild(gtagScript);
+
+          // Script de configuração do gtag
+          const gtagConfig = document.createElement('script');
+          gtagConfig.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17843619481');
+          `;
+          document.head.appendChild(gtagConfig);
+        }
+      }
     }
   }, []);
 
